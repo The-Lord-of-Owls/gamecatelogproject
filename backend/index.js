@@ -27,9 +27,13 @@ app.use( session( sess ) )
 
 //Authentication Checker
 function Authenticated( req, res, next ) {
-    if ( req.session.user ) next()
+    if ( !req.session.user ) next()
     else res.send( '0' )
 }
+
+
+//Mongoose Models
+const { User } = require( "./models/user.js" )
 
 
 //Public Routes
@@ -42,16 +46,24 @@ app.get( "/verify", ( req, res ) => {
 } )
 
 //Private Routes
-app.get( "/my-games", Authenticated, ( req, res ) => {
-    res.send( "my games in progress" )
+app.get( "/my-games", Authenticated, async ( req, res ) => {
+    if ( req.session.user.userId ) res.json( [ "default" ] )
+
+    User.findOne( { userid: req.session.user.userId } ).then( user => {
+        res.json( user.myGames || [ "default" ] )
+    } )
 } )
 
 app.get( "/user-info", Authenticated, ( req, res ) => {
-    res.send( "user info in progress" )
+    if ( req.session.user.userId ) res.json( { default: true } )
+
+    User.findOne( { userid: req.session.user.userId } ).then( user => {
+        res.json( user || { default: true } )
+    } )
 } )
 
 
-mongoose.connect( process.env.mongooseurl || 'mongodb://127.0.0.1:27017' ).then( () => {
+mongoose.connect( process.env.MongooseURL || 'mongodb://127.0.0.1:27017' ).then( () => {
     app.listen( process.env.RestPort || 8080, () => {
         console.log( `Backend running on port: ${ process.env.RestPort || 8080 }` )
     } )
