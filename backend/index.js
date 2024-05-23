@@ -27,7 +27,7 @@ app.use( session( sess ) )
 
 //Authentication Checker
 function Authenticated( req, res, next ) {
-    if ( !req.session.user ) next()
+    if ( req.session.user ) next()
     else res.send( '0' )
 }
 
@@ -47,16 +47,12 @@ app.get( "/verify", ( req, res ) => {
 
 //Private Routes
 app.get( "/my-games", Authenticated, async ( req, res ) => {
-    if ( req.session.user.userId ) res.json( [ "default" ] )
-
     User.findOne( { userid: req.session.user.userId } ).then( user => {
         res.json( user.myGames || [ "default" ] )
     } )
 } )
 
 app.get( "/user-info", Authenticated, ( req, res ) => {
-    if ( req.session.user.userId ) res.json( { default: true } )
-
     User.findOne( { userid: req.session.user.userId } ).then( user => {
         res.json( user || { default: true } )
     } )
