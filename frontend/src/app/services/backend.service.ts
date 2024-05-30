@@ -34,15 +34,40 @@ export class BackendService {
   //Why on earth can't we just use fetch without problems? It's litterally built into every browser on eart.
   //TODO: Rework to send passwords through normal http.post instead of through get as query parameters
   login( data: LoginData ): Observable<any> {
-	return this.http.post( `${ this.backendURL }/login`, data, { headers: this.baseHeaders } )
+	let baseParams = new HttpParams();
+
+	baseParams = baseParams.set( "email", data.email )
+	baseParams = baseParams.set( "password", data.password )
+
+	return this.http.post( `${ this.backendURL }/login`, data, {
+		headers: this.baseHeaders,
+		params: baseParams
+	} )
   }
 
   logout( data: LogoutData ): Observable<any> {
-	return this.http.post( `${ this.backendURL }/logout`, data, { headers: this.baseHeaders } )
+	let baseParams = new HttpParams();
+
+	baseParams = baseParams.set( "email", data.email )
+
+	return this.http.post( `${ this.backendURL }/logout`, data, {
+		headers: this.baseHeaders,
+		params: baseParams
+	} )
   }
 
   register( data: RegistationData ): Observable<any> {
-	return this.http.post( `${ this.backendURL }/register`, data, { headers: this.baseHeaders } )
+	let baseParams = new HttpParams();
+
+	baseParams = baseParams.set( "name", data.name )
+	baseParams = baseParams.set( "email", data.email )
+	baseParams = baseParams.set( "password", data.password )
+	baseParams = baseParams.set( "passwordConfirmation", data.passwordConfirmation )
+
+	return this.http.post( `${ this.backendURL }/register`, data, {
+		headers: this.baseHeaders,
+		params: baseParams
+	} )
   }
 
   //Return an array of user's games that they favorited
