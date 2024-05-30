@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs'
 import { BackendService } from '../services/backend.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +27,16 @@ export class LoginComponent {
   constructor(private loginService: BackendService) {}
 
   onSubmit(form: NgForm, loggingIn: boolean) {
-    console.log(form.value);
+	const isRegistration: Boolean = ( form.value.name !== undefined ) || false
+
+	if ( isRegistration ) {
+		this.loginService.register( form.value ).subscribe( ( res: Observable<any> ) => {
+			console.log( res )
+		} )
+	} else {
+		this.loginService.login( form.value ).subscribe( ( res: Observable<any> ) => {
+			console.log( res )
+		} )
+	}
   }
 }

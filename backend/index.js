@@ -3,7 +3,7 @@ require( "dotenv" ).config()
 const express = require( "express"  )
 const session = require( "express-session" )
 const cors = require( "cors" )
-const jwt = require( "express-jwt" )
+const { expressjwt: jwt } = require( "express-jwt" )
 const jwksRsa = require( "jwks-rsa" )
 const mongoose = require( "mongoose" )
 const { v4: uuidv4 } = require( "uuid" )
@@ -57,12 +57,16 @@ const { User } = require( "./models/user.js" )
 
 
 //Public Routes
-app.get( "/login", ( req, res ) => {
-    res.send( "login in progress" )
+app.post( "/login", ( req, res ) => {
+    res.send( { msg: "login in progress" } )
 } )
 
-app.get( "/verify", ( req, res ) => {
-    res.send( "verify in progress" )
+app.post( "/register", ( req, res ) => {
+    res.send( { msg: "register in progress" } )
+} )
+
+app.post( "/logout", ( req, res ) => {
+    res.send( { msg: "logout in progress" } )
 } )
 
 

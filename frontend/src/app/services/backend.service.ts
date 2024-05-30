@@ -1,19 +1,49 @@
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
+
+//Interfaces for the backend
+export interface LoginData {
+	email: string
+	password: string
+}
+export interface LogoutData {
+	email: string
+}
+export interface RegistationData {
+	name: string
+	email: string
+	password: string
+	passwordConfirmation: string
+}
 
 @Injectable( {
   providedIn: 'root'
 } )
 export class BackendService {
-  private backendURL: String = "http://localhost/api/"
+  private backendURL: String = "http://localhost:8080"
 
-  constructor( private http: HttpClient ) { }
+  private baseHeaders = new HttpHeaders();
 
-  //Stub functions for handling logging in/out(consolt Auth0/Angular docks)
-  //These may not be necessary yet. Here for now while consolting docs
-  login(): void {}
-  logout(): void {}
+  constructor( private http: HttpClient ) {
+	this.baseHeaders = this.baseHeaders.set('Access-Control-Allow-Origin', '*');
+	this.baseHeaders = this.baseHeaders.set('Content-Type', 'application/json');
+  }
+
+  //This is bad, don't do this. Angular forced my hand with it's stupid HttpClient not wanting to work with post,
+  //Why on earth can't we just use fetch without problems? It's litterally built into every browser on eart.
+  //TODO: Rework to send passwords through normal http.post instead of through get as query parameters
+  login( data: LoginData ): Observable<any> {
+	return this.http.post( `${ this.backendURL }/login`, data, { headers: this.baseHeaders } )
+  }
+
+  logout( data: LogoutData ): Observable<any> {
+	return this.http.post( `${ this.backendURL }/logout`, data, { headers: this.baseHeaders } )
+  }
+
+  register( data: RegistationData ): Observable<any> {
+	return this.http.post( `${ this.backendURL }/register`, data, { headers: this.baseHeaders } )
+  }
 
   //Return an array of user's games that they favorited
   fetchMyGames(): Observable<any> {
