@@ -21,7 +21,7 @@ export interface RegistationData {
   providedIn: 'root'
 } )
 export class BackendService {
-  private backendURL: String = "http://localhost:8080"
+  private backendURL: string = "http://localhost:8080"
 
   private baseHeaders = new HttpHeaders();
 
@@ -73,6 +73,28 @@ export class BackendService {
   //Return an array of user's games that they favorited
   fetchMyGames(): Observable<any> {
     return this.http.get<any>( `${ this.backendURL }/my-game` )
+  }
+
+  addToMyGames( guid: string ): Observable<any> {
+	let baseParams = new HttpParams();
+
+	baseParams = baseParams.set( "guid", guid )
+
+	return this.http.post<any>( `${ this.backendURL }/my-game/add`, guid, {
+		headers: this.baseHeaders,
+		params: baseParams
+	} )
+  }
+
+  removeFromMyGames( guid: string ): Observable<any> {
+	let baseParams = new HttpParams();
+
+	baseParams = baseParams.set( "guid", guid )
+
+	return this.http.post<any>( `${ this.backendURL }/my-game/remove`, guid, {
+		headers: this.baseHeaders,
+		params: baseParams
+	} )
   }
 
   //Return info about the currently logged in user
