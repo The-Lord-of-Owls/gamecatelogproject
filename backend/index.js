@@ -67,7 +67,6 @@ app.post( "/login", ( req, res ) => {
 } )
 
 app.post( "/register", ( req, res ) => {
-	console.log( req.body )
 	const { email, password, confirmedPassword, name } = req.body;
 
 	if ( password === confirmedPassword ) {
@@ -92,17 +91,46 @@ app.post( "/logout", ( req, res ) => {
 
 
 //Private Routes
+
+//Get list of favorite games
 app.get( "/my-games", Authenticated, async ( req, res ) => {
-    User.findOne( { userid: req.session.user.userId } ).then( user => {
-        res.json( user.myGames || [ "default" ] )
-    } )
+    res.status( 200 ).send( { msg: "Sending favorite games", myGames: req.session.user.myGames } )
 } )
 
-app.get( "/user-info", Authenticated, ( req, res ) => {
-    User.findOne( { userid: req.session.user.userId } ).then( user => {
-        res.json( user || { default: true } )
-    } )
+//Add a game to the myFavorites array
+app.post( "/my-games/add", Authenticated, async ( req, res ) => {
+	const { guid } = req.body;
+
+	if ( req.session.user.myGames.includes( guid ) ) {
+		return res.status( 401 ).send( { msg: "Game already exists in favorites" } )
+	}
+
+	req.session.user.myGames.push( guid )
+
+	await User.updateOne( { email: req.session.user.email }, { myGames: req.session.user.myGames } )
+	res.status( 200 ).send( { msg: "Game added successfully" } )
 } )
+
+//Remove a game from the myFavorites array
+app.post( "/my-games/remove", Authenticated, async ( req, res ) => {
+	const { guid } = req.body;
+
+	const index = req.session.user.myGames.indexOf( guid );
+	if ( index <= -1 ) {
+		return res.status( 404 ).send( { msg: "Game is not in favorites" } )
+	}
+
+	req.session.user.myGames.splice( index, 1 )
+
+	await User.updateOne( { email: req.session.user.email }, { myGames: req.session.user.myGames } )
+	res.status( 200 ).send( { msg: "Game was removed from favorites" } )
+} )
+
+//Send the user's info if authenticated
+app.get( "/user-info", Authenticated, ( req, res ) => {
+    res.status( 200 ).send( { msg: "Sending user info", user: req.session.user } )
+} )
+
 
 console.log( "Attempting to connect to MongoDB" )
 mongoose.connect( process.env.MongooseURL || 'mongodb://127.0.0.1:27017' ).then( () => {
