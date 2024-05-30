@@ -1,6 +1,10 @@
 .gamesList {
-    margin: 2% 10% 2% 10%;
+    margin: 2% 6% 2% 6%;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: auto;
+}
+
+.header-spacer {
+    min-height: 80px;
 }
