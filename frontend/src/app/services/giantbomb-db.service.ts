@@ -13,7 +13,19 @@ export class GiantbombDbService {
 
   //Return data of a specific game
   fetchGameData(guid: string): Observable<any> {
-    return this.http.get<any>(`${this.giantBombURL}/game/${guid}/?api_key=${this.apiKey}&format=json`)
+    let baseHeaders = new HttpHeaders();
+    let baseParams = new HttpParams();
+
+    baseHeaders = baseHeaders.set('Access-Control-Allow-Origin', '*');
+    baseHeaders = baseHeaders.set('Content-Type', 'application/json');
+
+    baseParams = baseParams.set('api_key', this.apiKey)
+    baseParams = baseParams.set('format', 'json');
+
+    return this.http.get<any>(`${this.giantBombURL}/game/${guid}`, {
+      headers: baseHeaders,
+      params: baseParams
+    })
   }
 
   //Return a json contianing games

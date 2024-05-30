@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatCardModule } from '@angular/material/card';
 import { GiantbombDbService } from '../services/giantbomb-db.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-all-games',
@@ -11,6 +12,7 @@ import { GiantbombDbService } from '../services/giantbomb-db.service';
     CommonModule,
     MatPaginatorModule,
     MatCardModule,
+    RouterLink,
   ],
   templateUrl: './all-games.component.html',
   styleUrl: './all-games.component.scss'

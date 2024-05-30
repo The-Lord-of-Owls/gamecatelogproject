@@ -1,1 +1,54 @@
-<p>login works!</p>
+<main>
+    <mat-card>
+        <mat-tab-group mat-align-tabs="start">
+            <mat-tab label="Login">
+                <mat-card-title>Login</mat-card-title>
+                <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm, true)" autocomplete="off">
+                    <mat-card-content>
+                        <mat-form-field>
+                            <mat-label>Enter your email</mat-label>
+                            <input matInput ngModel name="email">
+                        </mat-form-field>
+                        <br />
+                        <mat-form-field>
+                            <mat-label>Enter your password</mat-label>
+                            <input matInput ngModel name="password">
+                        </mat-form-field>
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <button mat-button type="submit">Login</button>
+                    </mat-card-actions>
+                </form>
+            </mat-tab>
+            <mat-tab label="Register">
+                <mat-card-title>Register</mat-card-title>
+                <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm, false)" autocomplete="off">
+                    <mat-card-content>
+                        <mat-form-field>
+                            <mat-label>Enter your name</mat-label>
+                            <input matInput ngModel name="name">
+                        </mat-form-field>
+                        <br />
+                        <mat-form-field>
+                            <mat-label>Enter your email</mat-label>
+                            <input matInput ngModel name="email">
+                        </mat-form-field>
+                        <br />
+                        <mat-form-field>
+                            <mat-label>Enter your password</mat-label>
+                            <input matInput ngModel name="password">
+                        </mat-form-field>
+                        <br />
+                        <mat-form-field>
+                            <mat-label>Confirm your password</mat-label>
+                            <input matInput ngModel name="passwordConfirm">
+                        </mat-form-field>
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <button mat-button type="submit">Register</button>
+                    </mat-card-actions>
+                </form>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-card>
+</main>
