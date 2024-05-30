@@ -7,12 +7,18 @@
                     <mat-card-content>
                         <mat-form-field>
                             <mat-label>Enter your email</mat-label>
-                            <input matInput ngModel name="email">
+                            <input matInput type="email" ngModel name="email" email required>
+                            @if (userEmail.invalid) {
+                                <mat-error>{{userEmailError}}</mat-error>
+                            }
                         </mat-form-field>
                         <br />
                         <mat-form-field>
                             <mat-label>Enter your password</mat-label>
-                            <input matInput ngModel name="password">
+                            <input matInput type="password" ngModel name="password" required>
+                            @if (userPassword.invalid) {
+                                <mat-error>{{userPasswordError}}</mat-error>
+                            }
                         </mat-form-field>
                     </mat-card-content>
                     <mat-card-actions>
@@ -26,22 +32,34 @@
                     <mat-card-content>
                         <mat-form-field>
                             <mat-label>Enter your name</mat-label>
-                            <input matInput ngModel name="name">
+                            <input matInput ngModel name="name" required>
+                            @if (userEmail.invalid) {
+                                <mat-error>{{newNameError}}</mat-error>
+                            }
                         </mat-form-field>
                         <br />
                         <mat-form-field>
                             <mat-label>Enter your email</mat-label>
-                            <input matInput ngModel name="email">
+                            <input matInput type="email" ngModel name="email" email required>
+                            @if (userEmail.invalid) {
+                                <mat-error>{{newEmailError}}</mat-error>
+                            }
                         </mat-form-field>
                         <br />
                         <mat-form-field>
                             <mat-label>Enter your password</mat-label>
-                            <input matInput ngModel name="password">
+                            <input matInput type="password" ngModel name="password" required>
+                            @if (userEmail.invalid) {
+                                <mat-error>{{newPasswordError}}</mat-error>
+                            }
                         </mat-form-field>
                         <br />
                         <mat-form-field>
                             <mat-label>Confirm your password</mat-label>
-                            <input matInput ngModel name="passwordConfirm">
+                            <input matInput type="password" ngModel name="passwordConfirm" required>
+                            @if (userEmail.invalid) {
+                                <mat-error>{{newPasswordConfirmError}}</mat-error>
+                            }
                         </mat-form-field>
                     </mat-card-content>
                     <mat-card-actions>
