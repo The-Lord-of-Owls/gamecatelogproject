@@ -32,7 +32,6 @@ export class AllGamesComponent {
     this.giantBombService.fetchGames(pageSize, (pageSize * pageIndex)).subscribe((games) => {
       this.games = games.results;
       this.length = games.number_of_total_results;
-      console.log(games.results);
     })
   }
 
