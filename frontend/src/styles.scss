@@ -5,25 +5,25 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-$primary-palette: mat.define-palette(mat.$deep-purple-palette);
-$accent-palette: mat.define-palette(mat.$amber-palette);
+$primary-palette: mat.m2-define-palette(mat.$m2-deep-purple-palette);
+$accent-palette: mat.m2-define-palette(mat.$m2-amber-palette);
 
 $colors: 50, 100, 200, 300, 400, 500, 600, 700, 800, 900;
 @each $color in $colors {
     .primary-#{$color} {
-        color: mat.get-color-from-palette($primary-palette, $color);
+        color: mat.m2-get-color-from-palette($primary-palette, $color);
     }
     .accent-#{$color} {
-        color: mat.get-color-from-palette($accent-palette, $color);
+        color: mat.m2-get-color-from-palette($accent-palette, $color);
     }
 }
 
 $backgrounds: 50, 100, 200, 300, 400, 500, 600, 700, 800, 900;
 @each $background in $backgrounds {
     .primary-bg-#{$background} {
-        background-color: mat.get-color-from-palette($primary-palette, $background);
+        background-color: mat.m2-get-color-from-palette($primary-palette, $background);
     }
     .accent-bg-#{$background} {
-        background-color: mat.get-color-from-palette($accent-palette, $background);
+        background-color: mat.m2-get-color-from-palette($accent-palette, $background);
     }
 }
