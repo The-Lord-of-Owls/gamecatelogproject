@@ -1,0 +1,14 @@
+main {
+    display: flex;
+    margin: 2% 6% 2% 6%;
+}
+
+.imgFrame {
+    width: 25%;
+    height: 100%;
+}
+
+.descFrame {
+    height: 100%;
+    flex-grow: 4;
+}
