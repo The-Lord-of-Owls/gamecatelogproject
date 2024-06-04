@@ -1,6 +1,7 @@
 require( "dotenv" ).config()
 
 const express = require( "express"  )
+const axios = require( "axios" )
 const session = require( "express-session" )
 const bodyParser = require( "body-parser" )
 const bcrypt = require( "bcryptjs" )
@@ -88,6 +89,28 @@ app.post( "/logout", ( req, res ) => {
 		res.status( 200 ).send( { msg: "Logout successful" } )
 	} )
 } )
+
+
+const giantBombURL = "https://www.giantbomb.com/api"
+const apiKey = "53a931fb4f5b5e21e58d648276d55f1378019f5f"
+app.post( "/game", async ( req, res ) => {
+	const { guid } = req.query;
+
+	axios.get( `${ giantBombURL }/game/${ guid }/?api_key=${ apiKey }&format=json` ).then( data => {
+		res.status( 200 ).send( data.data )
+	} ).catch( err => console.error( err ) )
+} )
+
+app.get( "/games", async ( req, res ) => {
+	const { limit, offset } = req.query;
+
+	axios.get( `${ giantBombURL }/games/?api_key=${ apiKey }&format=json&limit=${ limit }&offset=${ offset }` ).then( data => {
+		res.status( 200 ).send( data.data )
+	} ).catch( err => console.error( err ) )
+} )
+
+
+
 
 
 //Private Routes

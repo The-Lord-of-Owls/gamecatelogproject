@@ -6,8 +6,7 @@ import { Observable } from 'rxjs'
   providedIn: 'root'
 })
 export class GiantbombDbService {
-  private giantBombURL: string = "https://www.giantbomb.com/api"
-  private apiKey: string = "53a931fb4f5b5e21e58d648276d55f1378019f5f"
+  private giantBombURL: string = "http://localhost:8080"
   private baseHeaders = new HttpHeaders();
 
   constructor(private http: HttpClient) {
@@ -19,10 +18,9 @@ export class GiantbombDbService {
   fetchGameData(guid: string): Observable<any> {
     let baseParams = new HttpParams();
 
-    baseParams = baseParams.set('api_key', this.apiKey)
-    baseParams = baseParams.set('format', 'json');
+    baseParams = baseParams.set( 'guid', guid );
 
-    return this.http.get<any>(`${this.giantBombURL}/game/${guid}`, {
+    return this.http.get<any>(`${ this.giantBombURL }/game/${guid}`, {
       headers: this.baseHeaders,
       params: baseParams
     })
@@ -32,15 +30,16 @@ export class GiantbombDbService {
   fetchGames(limit: number, offset: number): Observable<any> {
     let baseParams = new HttpParams();
 
-    baseParams = baseParams.set('api_key', this.apiKey)
-    baseParams = baseParams.set('format', 'json');
     baseParams = baseParams.set('limit', limit);
     baseParams = baseParams.set('offset', offset);
 
-    return this.http.get<any>(`${this.giantBombURL}/games`, {
+    return this.http.get<any>( `${ this.giantBombURL }/games`, {
       headers: this.baseHeaders,
-      params: baseParams
-    })
+      params: {
+		limit: limit,
+		offset: offset
+	  }
+    } )
   }
 }
 
