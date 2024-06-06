@@ -93,18 +93,14 @@ app.post( "/logout", ( req, res ) => {
 
 const giantBombURL = "https://www.giantbomb.com/api"
 const apiKey = "53a931fb4f5b5e21e58d648276d55f1378019f5f"
-app.post( "/game", async ( req, res ) => {
-	const { guid } = req.query;
-
-	axios.get( `${ giantBombURL }/game/${ guid }/?api_key=${ apiKey }&format=json` ).then( data => {
+app.get( "/game/:guid", async ( req, res ) => {
+	axios.get( `${ giantBombURL }/game/${ req.params.guid }/?api_key=${ apiKey }&format=json` ).then( data => {
 		res.status( 200 ).send( data.data )
 	} ).catch( err => console.error( err ) )
 } )
 
-app.get( "/games", async ( req, res ) => {
-	const { limit, offset } = req.query;
-
-	axios.get( `${ giantBombURL }/games/?api_key=${ apiKey }&format=json&limit=${ limit }&offset=${ offset }` ).then( data => {
+app.get( "/games/:limit&:offset", async ( req, res ) => {
+	axios.get( `${ giantBombURL }/games/?api_key=${ apiKey }&format=json&limit=${ req.params.limit }&offset=${ req.params.offset }` ).then( data => {
 		res.status( 200 ).send( data.data )
 	} ).catch( err => console.error( err ) )
 } )
