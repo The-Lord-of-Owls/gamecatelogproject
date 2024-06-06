@@ -4,11 +4,17 @@ main {
 }
 
 .imgFrame {
-    width: 25%;
-    height: 100%;
+    width: auto;
+    height: inherit;
+}
+
+img {
+    width: 100%;
+    height: inherit;
+    object-fit: cover;
 }
 
 .descFrame {
-    height: 100%;
-    flex-grow: 4;
+    height: inherit;
+    margin-left: 2%;
 }
