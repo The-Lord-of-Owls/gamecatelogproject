@@ -46,6 +46,7 @@ const { User } = require( "./models/user.js" )
 //Public Routes
 app.post( "/login", ( req, res ) => {
 	const { email, password } = req.body;
+	console.log(req.body);
 
 	User.findOne( { email: email } ).then( user => {
 		if ( !user ) {
@@ -54,7 +55,7 @@ app.post( "/login", ( req, res ) => {
 
 		const passwordIsValid = bcrypt.compareSync( password, user.password )
 		if ( !passwordIsValid ) {
-			return res.status( 401 ).send( { msg: "Password is invalide" } )
+			return res.status( 401 ).send( { msg: "Password is invalid" } )
 		}
 
 		const token = jwt.sign( { id: user.email }, "Chicken Tenders", { expiresIn: 86400} )
@@ -93,8 +94,9 @@ app.post( "/logout", ( req, res ) => {
 
 const giantBombURL = "https://www.giantbomb.com/api"
 const apiKey = "53a931fb4f5b5e21e58d648276d55f1378019f5f"
-app.post( "/game", async ( req, res ) => {
+app.get( "/game", async ( req, res ) => {
 	const { guid } = req.query;
+	console.log(guid);
 
 	axios.get( `${ giantBombURL }/game/${ guid }/?api_key=${ apiKey }&format=json` ).then( data => {
 		res.status( 200 ).send( data.data )

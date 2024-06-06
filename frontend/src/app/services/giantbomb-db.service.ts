@@ -10,7 +10,7 @@ export class GiantbombDbService {
   private baseHeaders = new HttpHeaders();
 
   constructor(private http: HttpClient) {
-	this.baseHeaders = this.baseHeaders.set('Access-Control-Allow-Origin', '*');
+    this.baseHeaders = this.baseHeaders.set('Access-Control-Allow-Origin', '*');
     this.baseHeaders = this.baseHeaders.set('Content-Type', 'application/json');
   }
 
@@ -18,9 +18,9 @@ export class GiantbombDbService {
   fetchGameData(guid: string): Observable<any> {
     let baseParams = new HttpParams();
 
-    baseParams = baseParams.set( 'guid', guid );
+    baseParams = baseParams.set('guid', guid);
 
-    return this.http.get<any>(`${ this.giantBombURL }/game/${guid}`, {
+    return this.http.get<any>(`${this.giantBombURL}/game`, {
       headers: this.baseHeaders,
       params: baseParams
     })
@@ -33,13 +33,13 @@ export class GiantbombDbService {
     baseParams = baseParams.set('limit', limit);
     baseParams = baseParams.set('offset', offset);
 
-    return this.http.get<any>( `${ this.giantBombURL }/games`, {
+    return this.http.get<any>(`${this.giantBombURL}/games`, {
       headers: this.baseHeaders,
       params: {
-		limit: limit,
-		offset: offset
-	  }
-    } )
+        limit: limit,
+        offset: offset
+      }
+    })
   }
 }
 
