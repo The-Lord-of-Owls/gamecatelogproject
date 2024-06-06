@@ -81,18 +81,24 @@ app.post( "/register", ( req, res ) => {
 } )
 
 app.post( "/logout", ( req, res ) => {
-	req.session.destroy( err => {
-		if ( err ) {
-			return res.status( 500 ).send( { msg: "Logout failed" } )
-		}
-		res.status( 200 ).send( { msg: "Logout successful" } )
-	} )
+	if ( req.session.user.email === req.body.email ) {	//Sanity checking for logout
+		req.session.destroy( err => {
+			if ( err ) {
+				return res.status( 500 ).send( { msg: "Logout failed" } )
+			}
+			res.status( 200 ).send( { msg: "Logout successful" } )
+		} )
+	} else {
+		res.status( 401 ).send( { msg: "Email did not match the associated session user.email" } )
+	}
 } )
 
 
 
 const giantBombURL = "https://www.giantbomb.com/api"
 const apiKey = "53a931fb4f5b5e21e58d648276d55f1378019f5f"
+
+//Note for self, this is a good place to implement Redis
 app.get( "/game/:guid", async ( req, res ) => {
 	axios.get( `${ giantBombURL }/game/${ req.params.guid }/?api_key=${ apiKey }&format=json` ).then( data => {
 		res.status( 200 ).send( data.data )
