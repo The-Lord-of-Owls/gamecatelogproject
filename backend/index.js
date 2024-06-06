@@ -43,22 +43,20 @@ function Authenticated( req, res, next ) {
 const { User } = require( "./models/user.js" )
 
 
+
 //Public Routes
 app.post( "/login", ( req, res ) => {
-	const { email, password } = req.body;
-	console.log(req.body);
-
-	User.findOne( { email: email } ).then( user => {
+	User.findOne( { email: req.body.email } ).then( user => {
 		if ( !user ) {
 			return res.status( 404 ).send( { msg: "User not found" } )
 		}
 
-		const passwordIsValid = bcrypt.compareSync( password, user.password )
+		const passwordIsValid = bcrypt.compareSync( req.body.password, user.password )
 		if ( !passwordIsValid ) {
 			return res.status( 401 ).send( { msg: "Password is invalid" } )
 		}
 
-		const token = jwt.sign( { id: user.email }, "Chicken Tenders", { expiresIn: 86400} )
+		const token = jwt.sign( { id: user.email }, "Chicken Tenders", { expiresIn: 86400 } )
 		req.session.user = {
 			email: user.email,
 			name: user.name,
@@ -69,7 +67,7 @@ app.post( "/login", ( req, res ) => {
 } )
 
 app.post( "/register", ( req, res ) => {
-	const { email, password, confirmedPassword, name } = req.body;
+	const { email, password, confirmedPassword, name } = req.body
 
 	if ( password === confirmedPassword ) {
 		return res.status( 401 ).send( { msg: "Password confirmation does not match" } )
@@ -92,6 +90,7 @@ app.post( "/logout", ( req, res ) => {
 } )
 
 
+
 const giantBombURL = "https://www.giantbomb.com/api"
 const apiKey = "53a931fb4f5b5e21e58d648276d55f1378019f5f"
 app.get( "/game/:guid", async ( req, res ) => {
@@ -108,8 +107,6 @@ app.get( "/games/:limit&:offset", async ( req, res ) => {
 
 
 
-
-
 //Private Routes
 
 //Get list of favorite games
@@ -118,24 +115,20 @@ app.get( "/my-games", Authenticated, async ( req, res ) => {
 } )
 
 //Add a game to the myFavorites array
-app.post( "/my-games/add", Authenticated, async ( req, res ) => {
-	const { guid } = req.body;
-
-	if ( req.session.user.myGames.includes( guid ) ) {
+app.get( "/my-games/add/:guid", Authenticated, async ( req, res ) => {
+	if ( req.session.user.myGames.includes( req.params.guid ) ) {
 		return res.status( 401 ).send( { msg: "Game already exists in favorites" } )
 	}
 
-	req.session.user.myGames.push( guid )
+	req.session.user.myGames.push( req.params.guid )
 
 	await User.updateOne( { email: req.session.user.email }, { myGames: req.session.user.myGames } )
 	res.status( 200 ).send( { msg: "Game added successfully" } )
 } )
 
 //Remove a game from the myFavorites array
-app.post( "/my-games/remove", Authenticated, async ( req, res ) => {
-	const { guid } = req.body;
-
-	const index = req.session.user.myGames.indexOf( guid );
+app.get( "/my-games/remove/:get", Authenticated, async ( req, res ) => {
+	const index = req.session.user.myGames.indexOf( req.params.guid )
 	if ( index <= -1 ) {
 		return res.status( 404 ).send( { msg: "Game is not in favorites" } )
 	}
@@ -150,6 +143,7 @@ app.post( "/my-games/remove", Authenticated, async ( req, res ) => {
 app.get( "/user-info", Authenticated, ( req, res ) => {
     res.status( 200 ).send( { msg: "Sending user info", user: req.session.user } )
 } )
+
 
 
 console.log( "Attempting to connect to MongoDB" )
