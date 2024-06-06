@@ -103,11 +103,11 @@ app.post( "/logout", ( req, res ) => {
 
 
 const giantBombURL = "https://www.giantbomb.com/api"
-const apiKey = "53a931fb4f5b5e21e58d648276d55f1378019f5f"
-
+const apiKey = process.env.GiantBombAPIKey
+const skipCache = process.env.skipCache || false
 //Note for self, this is a good place to implement Redis
 app.get( "/game/:guid", async ( req, res ) => {
-	if ( redisEnabled ) {
+	if ( redisEnabled && !skipCache ) {
 		const results = await redisClient.json.get( 'noderedis:jsondata', {
 			path: [
 				`$["${ req.params.guid }"]`
@@ -115,16 +115,20 @@ app.get( "/game/:guid", async ( req, res ) => {
 		} )
 	
 		if ( results.length > 0 ) {
-			return res.status( 200 ).send( results )
+			return res.status( 200 ).send( { results: results } )
 		}
 	}
 
 	axios.get( `${ giantBombURL }/game/${ req.params.guid }/?api_key=${ apiKey }&format=json` ).then( async data => {
-		if ( redisEnabled ) {
+		if ( redisEnabled && !skipCache ) {
 			redisClient.json.set( 'noderedis:jsondata', `$["${ req.params.guid }"]`, {
 				guid: data.data.results.guid,
 				name: data.data.results.name,
-				image: data.data.results.image
+				image: data.data.results.image,
+				developers: data.data.results.developers,
+				devs: data.data.results.devs,
+				deck: data.data.results.deck,
+				genre: data.data.results.genre
 			} )
 		}
 
@@ -132,9 +136,8 @@ app.get( "/game/:guid", async ( req, res ) => {
 	} ).catch( err => console.error( err ) )
 } )
 
-const skipCache = false	//Temporarily disable due to needing to figure out an efficient and clean way to return the results
 app.get( "/games/:limit&:offset", async ( req, res ) => {
-	if ( redisEnabled && skipCache ) {
+	if ( redisEnabled && !skipCache ) {
 		const results = await redisClient.json.get( 'noderedis:jsondata', {
 			path: [
 				`$.guids`,
@@ -219,14 +222,20 @@ mongoose.connect( process.env.MongooseURL || 'mongodb://127.0.0.1:27017' ).then(
 	console.log( "Successfully connected to MongoDB" )
 
 	//Handle redis cache
-	redisClient.connect().then( async () => {
-		//Reset our cache
-		await redisClient.del( 'noderedis:jsondata' )
-		await redisClient.json.set( 'noderedis:jsondata', '$', {} )
-
-		redisEnabled = true
-		console.log( "Redis Cache: Enabled" )
-	} )
+	if ( !skipCache ) {
+		try {
+			redisClient.connect().then( async () => {
+				//Reset our cache
+				await redisClient.del( 'noderedis:jsondata' )
+				await redisClient.json.set( 'noderedis:jsondata', '$', {} )
+		
+				redisEnabled = true
+				console.log( "Redis Cache: Enabled" )
+			} )
+		} catch ( e ) {
+			console.log( "Redis Cache: Disabled( Failure to connect )" )
+		}
+	} else console.log( "Redis Cache: Disabled" )
 
 	//Start express
 	app.listen( process.env.RestPort || 8080, () => {
