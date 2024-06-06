@@ -60,7 +60,7 @@ app.post( "/login", ( req, res ) => {
 
 		const passwordIsValid = bcrypt.compareSync( req.body.password, user.password )
 		if ( !passwordIsValid ) {
-			return res.status( 401 ).send( { msg: "Password is invalide" } )
+			return res.status( 401 ).send( { msg: "Password is invalid" } )
 		}
 
 		const token = jwt.sign( { id: user.email }, "Chicken Tenders", { expiresIn: 86400 } )

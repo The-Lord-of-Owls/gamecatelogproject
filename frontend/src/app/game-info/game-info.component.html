@@ -1,9 +1,16 @@
 <main>
-    <div class="imgFrame"></div>
+    <div class="imgFrame">
+        <img *ngIf="game" src="{{game.image.small_url}}">
+    </div>
     <div class="descFrame">
-        <h1>Name</h1>
-        <h5>Developer | Publisher</h5>
-        <p>Genres</p>
-        <span>Description</span>
+        <div *ngIf="game">
+            <h1>{{game.name}}</h1>
+            <h5>Genres: {{game.genre.toString().replaceAll(",", " | ")}}</h5>
+            <h5>Developers: {{game.devs.toString().replaceAll(",", " | ")}}</h5>
+            <span>{{game.deck}}</span>
+        </div>
+        <div class="buttonFrame">
+            <button mat-flat-button color="primary">Save Game</button>
+        </div>
     </div>
 </main>
